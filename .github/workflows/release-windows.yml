@@ -1,0 +1,74 @@
+name: Build and Release Windows EXE
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (example: 0.1.0)'
+        required: true
+        default: '0.1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-exe:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            $version = '${{ github.event.inputs.version }}'
+          } else {
+            $version = '${{ github.ref_name }}'
+            if ($version.StartsWith('v')) { $version = $version.Substring(1) }
+          }
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Build EXE with PyInstaller
+        shell: pwsh
+        run: |
+          pyinstaller --noconfirm --clean --onefile --noconsole --name "AgentNudgeReminder" main.py
+
+      - name: Rename artifact with version
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Copy-Item -Path dist/AgentNudgeReminder.exe -Destination "release/AgentNudgeReminder-v$version-windows-x64.exe"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgentNudgeReminder-windows-exe
+          path: release/AgentNudgeReminder-v*-windows-x64.exe
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Agent Nudge Reminder v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            release/AgentNudgeReminder-v*-windows-x64.exe

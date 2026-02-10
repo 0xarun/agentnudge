@@ -1,6 +1,6 @@
 # Agent Nudge Reminder
 
-Agent Nudge Reminder is a lightweight Windows desktop assistant for SOC analysts who need periodic nudges to check SIEM/security dashboards.
+Agent Nudge Reminder is a lightweight Windows desktop assistant for anyone who needs periodic nudges to check target pages, websites, or recurring workflows.
 
 It runs as a PySide6 desktop app, minimizes to the system tray, and executes reminder actions on a configurable schedule:
 - Play a Windows system alert sound
@@ -55,6 +55,9 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+> Note: `win10toast` is installed only on Windows via an environment marker.
+> On non-Windows environments, the app still runs; Windows toast and `winsound` alerts are skipped with log warnings. Build the EXE on Windows (or using the Windows GitHub Actions runner).
+
 ---
 
 ## Run locally
@@ -98,6 +101,33 @@ EXE output location:
 dist/AgentNudgeReminder.exe
 ```
 
+Versioned local output (from build script):
+
+```text
+release/AgentNudgeReminder-v<version>-windows-x64.exe
+```
+
+### Automated GitHub Release (recommended)
+
+This repository includes a workflow that builds and publishes the Windows EXE as a release asset:
+
+- Workflow file: `.github/workflows/release-windows.yml`
+- Trigger options:
+  - Push a tag like `v0.1.0`
+  - Run manually via **Actions > Build and Release Windows EXE** and provide a version
+
+Release asset naming:
+
+```text
+AgentNudgeReminder-v<version>-windows-x64.exe
+```
+
+### Manual Windows build script
+
+```powershell
+.\scripts\build_windows.ps1 -Version 0.1.0
+```
+
 ---
 
 ## Usage walkthrough
@@ -137,6 +167,7 @@ dist/AgentNudgeReminder.exe
 ### No toast notification
 - Ensure Windows notifications are enabled globally and for the app host process.
 - Focus Assist / Do Not Disturb may suppress toasts.
+- If running on non-Windows, `win10toast` is intentionally not installed and toast alerts are skipped.
 
 ### Browser does not open
 - Validate URL begins with `http://` or `https://`.

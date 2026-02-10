@@ -6,9 +6,12 @@ import time
 import webbrowser
 from urllib.parse import ParseResult, parse_qsl, urlencode, urlparse, urlunparse
 
-from win10toast import ToastNotifier
-
 from scheduler import ReminderConfig
+
+try:
+    from win10toast import ToastNotifier
+except ImportError:  # pragma: no cover - optional on non-Windows platforms
+    ToastNotifier = None
 
 try:
     import winsound
@@ -20,7 +23,7 @@ class ActionEngine:
     """Executes reminder actions without blocking the UI thread."""
 
     def __init__(self) -> None:
-        self._notifier = ToastNotifier()
+        self._notifier = ToastNotifier() if ToastNotifier is not None else None
 
     def execute(self, config: ReminderConfig) -> None:
         if config.play_sound:
@@ -48,7 +51,12 @@ class ActionEngine:
 
     def _show_notification(self, config: ReminderConfig) -> None:
         title = f"Agent Nudge Reminder - {config.name}"
-        msg = f"Time to check your dashboard: {config.dashboard_url}"
+        msg = f"Time for your scheduled check: {config.dashboard_url}"
+
+        if self._notifier is None:
+            logging.warning("win10toast unavailable; toast notification skipped on this platform")
+            return
+
         try:
             self._notifier.show_toast(title, msg, duration=5, threaded=True)
         except Exception as exc:  # noqa: BLE001
