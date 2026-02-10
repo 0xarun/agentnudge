@@ -5,16 +5,16 @@ Agent Nudge Reminder is a lightweight Windows desktop assistant for SOC analysts
 It runs as a PySide6 desktop app, minimizes to the system tray, and executes reminder actions on a configurable schedule:
 - Play a Windows system alert sound
 - Show a Windows toast notification
-- Open/focus a dashboard URL in your browser
+- Open/focus a target URL in your browser
 - Refresh the page via cache-busted URL launch
 
-## How SOC analysts use it
+## How people use it
 
-1. Define a recurring reminder (name, minutes, dashboard URL).
+1. Define a recurring reminder (name, minutes, URL).
 2. Select preferred nudge methods (sound/notification/browser/refresh).
-3. Click **Start** and keep working.
+3. Click **Start** and continue your work.
 4. Minimize to tray so the app continues in the background.
-5. Receive nudges at each interval and quickly pivot back to dashboard checks.
+5. Receive nudges at each interval and jump back to your target page quickly.
 
 ---
 
@@ -107,7 +107,7 @@ dist/AgentNudgeReminder.exe
 2. **Set reminder**
    - Enter reminder name.
    - Set interval in minutes.
-   - Enter valid `http://` or `https://` dashboard URL.
+   - Enter valid `http://` or `https://` target URL.
    - Choose action checkboxes.
    - Click **Start**.
 3. **Minimize to tray**

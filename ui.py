@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(18, 18, 18, 18)
         layout.setSpacing(12)
 
-        heading = QLabel("SOC Dashboard Reminder", root)
+        heading = QLabel("Dashboard Reminder", root)
         heading.setObjectName("heading")
         subtitle = QLabel("Configure a lightweight nudge loop and run it from the tray.", root)
         subtitle.setObjectName("subtitle")
@@ -65,8 +65,8 @@ class MainWindow(QMainWindow):
         form.setSpacing(10)
 
         self.name_input = QLineEdit(card)
-        self.name_input.setPlaceholderText("Example: Morning SIEM Patrol")
-        self.name_input.setText("SOC Check")
+        self.name_input.setPlaceholderText("Example: Daily Ops Check")
+        self.name_input.setText("Daily Check")
 
         self.interval_input = QSpinBox(card)
         self.interval_input.setRange(1, 1440)
@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         self.interval_input.setValue(15)
 
         self.url_input = QLineEdit(card)
-        self.url_input.setPlaceholderText("https://siem.example.local/dashboard")
+        self.url_input.setPlaceholderText("https://example.com/dashboard")
 
         self.sound_checkbox = QCheckBox("Play sound", card)
         self.sound_checkbox.setChecked(True)
@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
 
         form.addRow("Reminder name", self.name_input)
         form.addRow("Interval", self.interval_input)
-        form.addRow("Dashboard URL", self.url_input)
+        form.addRow("Target URL", self.url_input)
         form.addRow(self.sound_checkbox)
         form.addRow(self.notify_checkbox)
         form.addRow(self.open_checkbox)
@@ -159,7 +159,7 @@ class MainWindow(QMainWindow):
 
         url = self.url_input.text().strip()
         if not self._is_valid_url(url):
-            raise ValueError("Dashboard URL must be a valid http:// or https:// URL.")
+            raise ValueError("Target URL must be a valid http:// or https:// URL.")
 
         if not any(
             [
