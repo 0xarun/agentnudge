@@ -1,6 +1,6 @@
 # Agent Nudge Reminder
 
-Agent Nudge Reminder is a lightweight Windows desktop assistant for anyone who needs periodic nudges to check target pages, websites, or recurring workflows.
+Agent Nudge Reminder is a lightweight Windows desktop assistant for SOC analysts who need periodic nudges to check SIEM/security dashboards.
 
 It runs as a PySide6 desktop app, minimizes to the system tray, and executes reminder actions on a configurable schedule:
 - Play a Windows system alert sound

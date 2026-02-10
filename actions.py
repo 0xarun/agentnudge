@@ -48,7 +48,7 @@ class ActionEngine:
 
     def _show_notification(self, config: ReminderConfig) -> None:
         title = f"Agent Nudge Reminder - {config.name}"
-        msg = f"Time for your scheduled check: {config.dashboard_url}"
+        msg = f"Time to check your dashboard: {config.dashboard_url}"
         try:
             self._notifier.show_toast(title, msg, duration=5, threaded=True)
         except Exception as exc:  # noqa: BLE001
